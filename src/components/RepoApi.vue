@@ -1,27 +1,36 @@
 <template>
-  <div class="container grid grid-row-3 grid-flow-row">
-    <div class="flex flex-row text-center items-center mx-auto border-1 border-solid border-green-300">
+  <div class="container flex flex-col">
+
+
+
+
+
+    <div class="flex flex-row text-center items-center mx-auto">
       <label for="search">Search Repository</label>
       <input type="search" name="search" id="" placeholder="Search Repositories"  @keydown ='filterRepositories(repositories)'  class="p-2 text-slate-200 rounded-xl my-4">
     </div>
 
+   <div class="grid grid-cols-2 gap-2">
     <div
       v-for="repo in currentItems"
       :key="repo.id"
-      class="card card-compact w-96 bg-base-100 shadow-xl mx-auto p-1 my-8"
+      class=" card card-compact w-96  bg-base-100 shadow-xl mx-auto p-1 my-8"
     >
       
         <h1 class="font-bold text-2xl">
           <a :href="repo.html_url">{{ repo.name }}</a>
         </h1> <br>
         <span>Date : {{ repo.created_at }}</span> <br>
-        <span class="text-green-400">Language : {{ repo.language }}</span>
+        <span class="text-green-400">Language : {{ repo.language }}</span> <br>
+        <span>Stars : {{ repo.stargazers_count }}</span> <br>
+        <span>Visibility : {{ repo.visibility }}</span>
         <div>
           <Button class="bg-green-300 text-black my-4  p-2 rounded-lg">
-            <a href="{repo.html_url}" target="_blank">View More</a>
+            <a href="{repo.repos_url}" target="_blank">View More</a>
           </Button>
         </div>
       </div>
+   </div>
     </div>
 
     <div>
@@ -29,7 +38,7 @@
         v-for="page in totalPages"
         :key="page"
         @click="handlePageChange(page)"
-        class="text-center m-2 p-2 rounded-lg focus:bg-green-400"
+        class="text-center m-2 p-2 rounded-lg focus:bg-green-400 hover:bg-slate-400"
       >
         {{ page }}
       </Button>
@@ -37,7 +46,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, cloneVNode } from "vue";
 import axios from "axios";
 
 export default {
@@ -45,7 +54,7 @@ export default {
     const repositories = ref([]);
     const filteredRepositories = ref([]);
     const currentPage = ref(1);
-    const itemsPerPage = 5;
+    const itemsPerPage = 4;
 
     const indexOfLastItem = computed(() => currentPage.value * itemsPerPage);
     const indexOfFirstItem = computed(
