@@ -1,0 +1,100 @@
+<template>
+  <div class="container grid grid-row-3 grid-flow-row">
+    <div class="flex flex-row text-center items-center mx-auto border-1 border-solid border-green-300">
+      <label for="search">Search Repository</label>
+      <input type="search" name="search" id="" placeholder="Search Repositories"  @keydown ='filterRepositories(repositories)'  class="p-2 text-slate-200 rounded-xl my-4">
+    </div>
+
+    <div
+      v-for="repo in currentItems"
+      :key="repo.id"
+      class="card card-compact w-96 bg-base-100 shadow-xl mx-auto p-1 my-8"
+    >
+      
+        <h1 class="font-bold text-2xl">
+          <a :href="repo.html_url">{{ repo.name }}</a>
+        </h1> <br>
+        <span>Date : {{ repo.created_at }}</span> <br>
+        <span class="text-green-400">Language : {{ repo.language }}</span>
+        <div>
+          <Button class="bg-green-300 text-black my-4  p-2 rounded-lg">
+            <a href="{repo.html_url}" target="_blank">View More</a>
+          </Button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <Button
+        v-for="page in totalPages"
+        :key="page"
+        @click="handlePageChange(page)"
+        class="text-center m-2 p-2 rounded-lg focus:bg-green-400"
+      >
+        {{ page }}
+      </Button>
+    </div>
+</template>
+
+<script>
+import { ref, onMounted, computed } from "vue";
+import axios from "axios";
+
+export default {
+  setup() {
+    const repositories = ref([]);
+    const filteredRepositories = ref([]);
+    const currentPage = ref(1);
+    const itemsPerPage = 5;
+
+    const indexOfLastItem = computed(() => currentPage.value * itemsPerPage);
+    const indexOfFirstItem = computed(
+      () => indexOfLastItem.value - itemsPerPage
+    );
+    const currentItems = computed(() =>
+      filteredRepositories.value.slice(
+        indexOfFirstItem.value,
+        indexOfLastItem.value
+      )
+    );
+    
+        const totalPages = computed(() =>
+          Math.ceil(filteredRepositories.value.length / itemsPerPage)
+        );
+
+    onMounted(async () => {
+      try {
+        const response = await axios.get(
+          "https://api.github.com/users/Joker4mas/repos"
+        );
+        repositories.value = response.data;
+        filteredRepositories.value = response.data;
+      } catch (error) {
+        console.error("Error fetching repositories:", error);
+      }
+    });
+
+    const handlePageChange = (pageNumber) => {
+      currentPage.value = pageNumber;
+    };
+
+    const filterRepositories = (event) => {
+      const searchTerm = event.target.value.toLowerCase();
+      filteredRepositories.value = repositories.value.filter((repo) =>
+        repo.name.toLowerCase().includes(searchTerm)
+      );
+    };
+
+    return {
+      repositories,
+      filteredRepositories,
+      currentPage,
+      itemsPerPage,
+      currentItems,
+      totalPages,
+      handlePageChange,
+      filterRepositories,
+    };
+  },
+};
+</script>
