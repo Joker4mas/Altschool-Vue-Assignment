@@ -1,20 +1,16 @@
 <template>
   <div class="container flex flex-col">
 
-
-
-
-
     <div class="flex flex-row text-center items-center mx-auto">
       <label for="search">Search Repository</label>
-      <input type="search" name="search" id="" placeholder="Search Repositories"  @keydown ='filterRepositories(repositories)'  class="p-2 text-slate-200 rounded-xl my-4">
+      <input type="search" name="search" id="" placeholder="Search Repositories"  @keydown ='filterRepositories(repo)'  class="p-2 text-slate-200 rounded-xl ">
     </div>
 
-   <div class="grid grid-cols-2 gap-2">
+   <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
     <div
       v-for="repo in currentItems"
       :key="repo.id"
-      class=" card card-compact w-96  bg-base-100 shadow-xl mx-auto p-1 my-8"
+      class=" card card-compact w-96  bg-base-100 shadow-xl mx-auto my-8"
     >
       
         <h1 class="font-bold text-2xl">
@@ -22,8 +18,8 @@
         </h1> <br>
         <span>Date : {{ repo.created_at }}</span> <br>
         <span class="text-green-400">Language : {{ repo.language }}</span> <br>
-        <span>Stars : {{ repo.stargazers_count }}</span> <br>
-        <span>Visibility : {{ repo.visibility }}</span>
+        <span class="my-2">Stars : {{ repo.stargazers_count }}</span> <br>
+        <span class="my-2">Visibility : {{ repo.visibility }}</span>
         <div>
           <Button class="bg-green-300 text-black my-4  p-2 rounded-lg">
             <a href="{repo.repos_url}" target="_blank">View More</a>
