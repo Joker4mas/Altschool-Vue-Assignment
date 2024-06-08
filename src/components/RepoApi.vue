@@ -3,14 +3,14 @@
 
     <div class="flex flex-row text-center items-center mx-auto">
       <label for="search">Search Repository</label>
-      <input type="search" name="search" id="" placeholder="Search Repositories"  @keydown ='filterRepositories(repo)'  class="p-2 text-slate-200 rounded-xl ">
+      <input type="search" name="search" id="" placeholder="Search Repositories"  @keydown ='filterRepositories(repo)'  class="p-2 text-slate-200 rounded-xl">
     </div>
 
    <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
     <div
       v-for="repo in currentItems"
       :key="repo.id"
-      class=" card card-compact w-96  bg-base-100 shadow-xl mx-auto my-8"
+      class=" card card-compact w-96  bg-base-100 shadow-xl mx-auto my-4"
     >
       
         <h1 class="font-bold text-2xl">
@@ -34,7 +34,7 @@
         v-for="page in totalPages"
         :key="page"
         @click="handlePageChange(page)"
-        class="text-center m-2 p-2 rounded-lg focus:bg-green-400 hover:bg-slate-400"
+        class="text-center m-1 p-2 rounded-lg focus:bg-green-400 hover:bg-slate-400"
       >
         {{ page }}
       </Button>
